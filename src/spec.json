@@ -215,8 +215,7 @@
         "Stato",
         "Sanzione",
         "Data e ora ispezione"
-      ],
-      "chartColumn": 5
+      ]
     },
     {
       "id": "controlli-da-fare",
@@ -276,10 +275,9 @@
   "custom": [
     {
       "name": "GraficoScadenzeStati",
-      "title": "Scadenze per stato",
-      "description": "Grafico temporale sincronizzato con la tabella, con pratiche raggruppate per stato.",
+      "title": "Pratiche per stato",
+      "description": "Grafico a torta sincronizzato con i dati della pagina, con legenda interattiva e dettaglio delle pratiche.",
       "role": "section",
-      "pageId": "registro-pratiche",
       "position": "top"
     }
   ]
