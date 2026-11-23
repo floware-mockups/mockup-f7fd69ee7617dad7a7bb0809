@@ -1,0 +1,247 @@
+{
+  "title": "Scadenze e pratiche degli impianti termici",
+  "description": "Un registro per seguire le pratiche, vedere cosa scade e tenere sotto controllo i passaggi da completare.",
+  "accent": "emerald",
+  "pages": [
+    {
+      "id": "dashboard",
+      "title": "Riepilogo",
+      "description": "Scadenze vicine, controlli da fare e pratiche ancora aperte.",
+      "metrics": [
+        {
+          "label": "Pratiche aperte",
+          "value": "18"
+        },
+        {
+          "label": "Controlli del mese",
+          "value": "7"
+        },
+        {
+          "label": "Autorizzazioni in scadenza",
+          "value": "4"
+        },
+        {
+          "label": "Segnalazioni da chiudere",
+          "value": "3"
+        }
+      ],
+      "columns": [
+        "Pratica",
+        "Tipo",
+        "Sito",
+        "Tecnico",
+        "Scadenza",
+        "Stato"
+      ],
+      "rows": [
+        [
+          "PR-204",
+          "Controllo impianto",
+          "Cascina Lume",
+          "Neri",
+          "12/06/2026",
+          "Controllo da fare"
+        ],
+        [
+          "PR-198",
+          "Rinnovo autorizzazione",
+          "Borgo Nubi",
+          "Vela",
+          "18/06/2026",
+          "In verifica"
+        ],
+        [
+          "PR-191",
+          "Segnalazione",
+          "Corte Brina",
+          "Lumo",
+          "22/06/2026",
+          "Da chiudere"
+        ],
+        [
+          "PR-187",
+          "Controllo impianto",
+          "Mulino Chiaro",
+          "Neri",
+          "27/06/2026",
+          "Documenti da controllare"
+        ]
+      ],
+      "form": []
+    },
+    {
+      "id": "registro-pratiche",
+      "title": "Registro pratiche",
+      "description": "Cerca una pratica o filtra l’elenco per stato. Aggiungi qui le nuove pratiche.",
+      "metrics": [],
+      "columns": [
+        "Pratica",
+        "Tipo",
+        "Sito",
+        "Tecnico",
+        "Scadenza",
+        "Stato"
+      ],
+      "rows": [
+        [
+          "PR-204",
+          "Controllo impianto",
+          "Cascina Lume",
+          "Neri",
+          "12/06/2026",
+          "Controllo da fare"
+        ],
+        [
+          "PR-203",
+          "Rinnovo autorizzazione",
+          "Piana Vela",
+          "Mira",
+          "10/06/2026",
+          "Documenti da controllare"
+        ],
+        [
+          "PR-202",
+          "Segnalazione",
+          "Fonte Nubi",
+          "Lumo",
+          "11/06/2026",
+          "Da chiudere"
+        ],
+        [
+          "PR-201",
+          "Controllo impianto",
+          "Corte Brina",
+          "Neri",
+          "14/06/2026",
+          "In verifica"
+        ],
+        [
+          "PR-200",
+          "Rinnovo autorizzazione",
+          "Borgo Lieve",
+          "Mira",
+          "16/06/2026",
+          "In attesa di documenti"
+        ],
+        [
+          "PR-199",
+          "Controllo impianto",
+          "Riva Lumo",
+          "Vela",
+          "17/06/2026",
+          "Controllo da fare"
+        ],
+        [
+          "PR-198",
+          "Rinnovo autorizzazione",
+          "Borgo Nubi",
+          "Vela",
+          "18/06/2026",
+          "In verifica"
+        ],
+        [
+          "PR-197",
+          "Segnalazione",
+          "Poggio Chiaro",
+          "Lumo",
+          "20/06/2026",
+          "Da chiudere"
+        ],
+        [
+          "PR-196",
+          "Controllo impianto",
+          "Cascina Brina",
+          "Neri",
+          "23/06/2026",
+          "Documenti da controllare"
+        ],
+        [
+          "PR-195",
+          "Rinnovo autorizzazione",
+          "Fonte Vela",
+          "Mira",
+          "25/06/2026",
+          "In attesa di documenti"
+        ],
+        [
+          "PR-194",
+          "Controllo impianto",
+          "Mulino Nubi",
+          "Vela",
+          "28/06/2026",
+          "In verifica"
+        ],
+        [
+          "PR-193",
+          "Segnalazione",
+          "Piana Lume",
+          "Lumo",
+          "30/06/2026",
+          "Da chiudere"
+        ]
+      ],
+      "form": [
+        "Pratica",
+        "Tipo",
+        "Sito",
+        "Tecnico",
+        "Scadenza",
+        "Stato"
+      ]
+    },
+    {
+      "id": "controlli-da-fare",
+      "title": "Controlli da fare",
+      "description": "Pratiche con un controllo in programma o da avviare.",
+      "metrics": [
+        {
+          "label": "Da programmare",
+          "value": "5"
+        },
+        {
+          "label": "Entro 7 giorni",
+          "value": "3"
+        }
+      ],
+      "columns": [
+        "Pratica",
+        "Tipo",
+        "Sito",
+        "Tecnico",
+        "Scadenza",
+        "Stato"
+      ],
+      "rows": [
+        [
+          "PR-204",
+          "Controllo impianto",
+          "Cascina Lume",
+          "Neri",
+          "12/06/2026",
+          "Controllo da fare"
+        ],
+        [
+          "PR-199",
+          "Controllo impianto",
+          "Riva Lumo",
+          "Vela",
+          "17/06/2026",
+          "Controllo da fare"
+        ],
+        [
+          "PR-188",
+          "Controllo impianto",
+          "Corte Nubi",
+          "Mira",
+          "21/06/2026",
+          "Controllo da fare"
+        ]
+      ],
+      "form": []
+    }
+  ],
+  "theme": {
+    "palette": "verde-oliva",
+    "fonts": "moderno"
+  }
+}
