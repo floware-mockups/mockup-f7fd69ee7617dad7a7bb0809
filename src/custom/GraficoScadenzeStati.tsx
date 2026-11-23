@@ -2,12 +2,12 @@
 import { customTicker, customTimers } from "../customGuard.ts";
 const __mk = customTicker("GraficoScadenzeStati");
 const { setTimeout, setInterval, clearTimeout, clearInterval } = customTimers("GraficoScadenzeStati");
-import { Card, useTable } from "../floware";
+import { Card, Button, useTable, usePrototype } from "../floware";
 
 function leggiData(testo) {__mk();
   const valore = testo.trim();
   const italiana = valore.includes("/");
-  const parti = italiana ? valore.split("/") : valore.split("-");
+  const parti = valore.split(italiana ? "/" : "-");
   if (parti.length !== 3) return null;
   const indiceGiorno = italiana ? 0 : 2;
   const indiceAnno = italiana ? 2 : 0;
@@ -22,53 +22,65 @@ function leggiData(testo) {__mk();
 
 export default function GraficoScadenzeStati(props) {__mk();
   const table = useTable(props.pageId);
+  const { openDetail } = usePrototype();
   if (!table) return null;
   const scadenza = table.column("Scadenza");
   const stato = table.column("Stato");
   const pratica = table.column("Pratica");
   if (scadenza < 0 || stato < 0) return <Card title="Scadenze per stato"><p>Servono le colonne Scadenza e Stato per mostrare il grafico.</p></Card>;
-  const dati = table.rows.map((riga, indice) => ((__mk(), { indice, tempo: leggiData(riga[scadenza] || ""), data: riga[scadenza] || "", stato: riga[stato] || "Senza stato", nome: pratica >= 0 ? riga[pratica] : "Pratica " + (indice + 1) }))).filter((dato) => (__mk(), dato.tempo !== null)).sort((a, b) => (__mk(), a.tempo - b.tempo));
-  if (!dati.length) return <Card title="Scadenze per stato"><p>Nessuna scadenza valida da rappresentare.</p></Card>;
+  const dati = table.rows.map((riga, indice) => ((__mk(), { indice, tempo: leggiData(riga[scadenza] || ""), data: riga[scadenza] || "", stato: riga[stato] || "Senza stato", nome: pratica >= 0 ? riga[pratica] || "Pratica senza riferimento" : "Pratica " + (indice + 1) }))).filter((dato) => (__mk(), dato.tempo !== null)).sort((a, b) => (__mk(), a.tempo - b.tempo));
+  if (!dati.length) return <Card title="Scadenze per stato"><p>Nessuna scadenza valida da rappresentare. Il grafico si aggiorna con le righe della tabella.</p></Card>;
   const stati = [...new Set(dati.map((dato) => (__mk(), dato.stato)))];
-  const ultimoIndice = dati.length - 1;
+  let cursore = 24;
+  const gruppi = stati.map((nome) => {__mk();
+    const righe = dati.filter((dato) => (__mk(), dato.stato === nome));
+    const inizio = cursore;
+    cursore += 36 + righe.length * 34;
+    return { nome, righe, inizio };
+  });
+  const altezza = cursore + 56;
   const primo = dati[0].tempo;
+  const ultimoIndice = dati.length - 1;
   const ultimo = dati[ultimoIndice].tempo;
   const margine = Math.max((ultimo - primo) * 0.07, 86400000);
   const minimo = primo - margine;
   const massimo = ultimo + margine;
-  const altezza = stati.length * 78 + 95;
+  const posizione = (tempo) => (__mk(), 240 + ((tempo - minimo) / (massimo - minimo)) * 650);
   const formatta = (tempo) => (__mk(), new Intl.DateTimeFormat("it-IT", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" }).format(new Date(tempo)));
-  const posizione = (tempo) => (__mk(), 235 + ((tempo - minimo) / (massimo - minimo)) * 680);
   const escluse = table.rows.length - dati.length;
   return (
     <Card title="Scadenze per stato">
       <div className="space-y-3 text-(--mk-text)">
-        <p className="text-sm text-(--mk-muted)">Ogni punto è una pratica. Le scadenze avanzano da sinistra a destra; ogni corsia distingue uno stato. Le etichette indicano le pratiche.</p>
-        <div className="overflow-x-auto rounded border border-(--mk-border)">
-          <svg role="img" aria-label="Scadenze delle pratiche nel tempo, suddivise per stato" viewBox={"0 0 950 " + altezza} style={{ width: "100%", minWidth: "850px", height: altezza }}>
-            <title>Scadenze per stato delle pratiche</title>
+        <p className="text-sm text-(--mk-muted)">Asse orizzontale: Scadenza. Gruppi: Stato. Ogni punto rappresenta una riga della tabella; anche le pratiche con la stessa scadenza restano distinte.</p>
+        <div className="overflow-auto rounded border border-(--mk-border)" style={{ maxHeight: "32rem" }}>
+          <svg role="img" aria-label="Grafico temporale delle scadenze, con pratiche raggruppate per stato" viewBox={"0 0 940 " + altezza} style={{ width: "100%", minWidth: "850px", height: altezza }}>
+            <title>Scadenze delle pratiche per stato</title>
             {[0, 0.25, 0.5, 0.75, 1].map((quota) => {__mk();
-              const tempo = primo + (ultimo - primo) * quota;
               if (primo === ultimo && quota !== 0.5) return null;
+              const tempo = primo + (ultimo - primo) * quota;
               const x = posizione(tempo);
-              return <g key={quota}><line x1={x} x2={x} y1={25} y2={altezza - 48} stroke="var(--mk-divider)" strokeDasharray="3 4" /><text x={x} y={altezza - 22} textAnchor="middle" fill="var(--mk-muted)" fontSize="12">{formatta(tempo)}</text></g>;
+              return <g key={quota}><line x1={x} x2={x} y1={12} y2={cursore} stroke="var(--mk-divider)" strokeDasharray="3 4" /><text x={x} y={cursore + 28} textAnchor="middle" fill="var(--mk-muted)" fontSize="12">{formatta(tempo)}</text></g>;
             })}
-            {stati.map((nome, indice) => {__mk();
-              const y = 48 + indice * 78;
-              return <g key={nome}><text x={12} y={y + 4} fill="var(--mk-text)" fontSize="12">{nome}</text><line x1={235} x2={915} y1={y} y2={y} stroke="var(--mk-border)" /></g>;
-            })}
-            {dati.map((dato) => {__mk();
-              const x = posizione(dato.tempo);
-              const y = 48 + stati.indexOf(dato.stato) * 78;
-              return <g key={dato.indice}><title>{dato.nome + " · " + dato.data + " · " + dato.stato}</title><circle cx={x} cy={y} r={6} fill="var(--mk-primary)" stroke="var(--mk-surface)" strokeWidth={2} /><text x={x} y={y - 14} textAnchor="middle" fill="var(--mk-text)" fontSize="11">{dato.nome}</text></g>;
-            })}
+            {gruppi.map((gruppo) => (__mk(), <g key={gruppo.nome}>
+              <text x={12} y={gruppo.inizio} fill="var(--mk-text)" fontSize="13" fontWeight="600">{gruppo.nome + " (" + gruppo.righe.length + ")"}</text>
+              {gruppo.righe.map((dato, indice) => {__mk();
+                const y = gruppo.inizio + 26 + indice * 34;
+                const x = posizione(dato.tempo);
+                return <g key={dato.indice}>
+                  <title>{dato.nome + " · " + dato.data + " · " + dato.stato}</title>
+                  <text x={20} y={y + 4} fill="var(--mk-muted)" fontSize="12">{dato.nome}</text>
+                  <line x1={240} x2={890} y1={y} y2={y} stroke="var(--mk-divider)" />
+                  <circle cx={x} cy={y} r={6} fill="var(--mk-primary)" stroke="var(--mk-surface)" strokeWidth={2} />
+                </g>;
+              })}
+            </g>))}
           </svg>
         </div>
-        <p className="text-sm text-(--mk-muted)">{dati.length} pratiche rappresentate.{escluse > 0 ? " Scadenze mancanti o non valide: " + escluse + "." : ""}</p>
+        <p className="text-sm text-(--mk-muted)">{dati.length} pratiche rappresentate su {table.rows.length}.{escluse > 0 ? " Scadenze mancanti o non valide: " + escluse + "." : ""} Aggiornamento automatico dai dati della tabella.</p>
         <details>
-          <summary className="cursor-pointer text-sm">Date e pratiche in ordine cronologico</summary>
+          <summary className="cursor-pointer text-sm">Elenco cronologico e dettaglio pratiche</summary>
           <div className="overflow-x-auto mt-3">
-            <table className="w-full text-sm text-left"><thead><tr><th className="p-2">Scadenza</th><th className="p-2">Pratica</th><th className="p-2">Stato</th></tr></thead><tbody>{dati.map((dato) => (__mk(), <tr key={dato.indice} className="border-t border-(--mk-divider)"><td className="p-2">{dato.data}</td><td className="p-2">{dato.nome}</td><td className="p-2">{dato.stato}</td></tr>))}</tbody></table>
+            <table className="w-full text-sm text-left"><thead><tr><th className="p-2">Scadenza</th><th className="p-2">Pratica</th><th className="p-2">Stato</th><th className="p-2">Dettaglio</th></tr></thead><tbody>{dati.map((dato) => (__mk(), <tr key={dato.indice} className="border-t border-(--mk-divider)"><td className="p-2">{dato.data}</td><td className="p-2">{dato.nome}</td><td className="p-2">{dato.stato}</td><td className="p-2"><Button variant="link" onClick={() => (__mk(), openDetail(table.id, dato.indice))}>Apri</Button></td></tr>))}</tbody></table>
           </div>
         </details>
       </div>
